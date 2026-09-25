@@ -1,0 +1,28 @@
+# Gradle and Kotlin caches
+.gradle/
+.kotlin/
+**/build/
+
+# Machine-local Android configuration
+local.properties
+
+# Android Studio project metadata
+*.iml
+.idea/
+
+# Native build outputs
+.cxx/
+.externalNativeBuild/
+cmake-build-*/
+
+# Packaged application outputs and signing material
+*.apk
+*.aab
+*.jks
+*.keystore
+
+# Profiling, logs, and operating-system metadata
+captures/
+*.hprof
+*.log
+.DS_Store

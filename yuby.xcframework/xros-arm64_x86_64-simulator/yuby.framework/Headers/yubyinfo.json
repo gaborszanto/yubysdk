@@ -1,0 +1,994 @@
+{
+    "Objects": [
+        {
+            "ObjectType": "Gate",
+            "description": "Duck audio to the beat.",
+            "parameters": [
+                {   "Parameter": "OnOff", "Get": true, "Set": true, "min": 0, "max": 1, "default": 0,
+                    "description": "Turns the effect on/off. The actual switch will happen on the next Process() call for smooth, audio-artifact free operation."
+                },
+                {   "Parameter": "WetPercent", "Get": true, "Set": true, "min": 0, "max": 1, "default": 1,
+                    "description": "How audible is the effect."
+                },
+                {   "Parameter": "BeatsPerMinute", "Get": true, "Set": true, "min": 40, "max": 250, "default": 40,
+                    "description": "Bpm of the current audio, defines the speed of the gate."
+                },
+                {   "Parameter": "NumBeats", "Get": true, "Set": true, "min": 0.015625, "max": 4, "default": 1,
+                    "description": "Rhythm in beats to open and close the \"gate\", from 1/64 beats to 4 beats."
+                },
+                {   "Parameter": "Reset", "Get": false, "Set": true, "min": 0, "max": 1,
+                    "description": "Reset the internal state of the effect and immediately apply all parameters."
+                }
+            ]
+        },
+        {
+            "ObjectType": "Roll",
+            "description": "Loop audio to the beat.",
+            "parameters": [
+                {   "Parameter": "OnOff", "Get": true, "Set": true, "min": 0, "max": 1, "default": 0,
+                    "description": "Turns the effect on/off. The actual switch will happen on the next Process() call for smooth, audio-artifact free operation."
+                },
+                {   "Parameter": "WetPercent", "Get": true, "Set": true, "min": 0, "max": 1, "default": 1,
+                    "description": "How audible is the effect."
+                },
+                {   "Parameter": "BeatsPerMinute", "Get": true, "Set": true, "min": 40, "max": 250, "default": 40,
+                    "description": "Bpm of the current audio."
+                },
+                {   "Parameter": "NumBeats", "Get": true, "Set": true, "min": 0.015625, "max": 4, "default": 1,
+                    "description": "Loop length of the effect from 1/64 beats to 4 beats."
+                },
+                {   "Parameter": "Reset", "Get": false, "Set": true, "min": 0, "max": 1,
+                    "description": "Reset the internal state of the effect and immediately apply all parameters."
+                }
+            ]
+        },
+        {
+            "ObjectType": "BitCrusher",
+            "description": "Bit crusher with adjustable frequency and bit depth. Simulates an old-school digital sound card.",
+            "parameters": [
+                {   "Parameter": "OnOff", "Get": true, "Set": true, "min": 0, "max": 1, "default": 0,
+                    "description": "Turns the effect on/off. The actual switch will happen on the next Process() call for smooth, audio-artifact free operation."
+                },
+                {   "Parameter": "NumBits", "Get": true, "Set": true, "min": 0, "max": 16, "default": 8,
+                    "description": "Bit depth."
+                },
+                {   "Parameter": "FrequencyHz", "Get": true, "Set": true, "min": 20, "max": 10000, "default": 8000,
+                    "description": "Frequency in Hz."
+                },
+                {   "Parameter": "Reset", "Get": false, "Set": true, "min": 0, "max": 1,
+                    "description": "Reset the internal state of the effect and immediately apply all parameters."
+                }
+            ]
+        },
+        {
+            "ObjectType": "Filter",
+            "description": "IIR filter based on the typical direct form 1 formula: y[n] = (b0/a0)*x[n] + (b1/a0)*x[n-1] + (b2/a0)*x[n-2] - (a1/a0)*y[n-1] - (a2/a0)*y[n-2]",
+            "parameters": [
+                {   "Parameter": "OnOff", "Get": true, "Set": true, "min": 0, "max": 1, "default": 0,
+                    "description": "Turns the effect on/off. The actual switch will happen on the next Process() call for smooth, audio-artifact free operation."
+                },
+                {   "Parameter": "Type", "Get": true, "Set": true, "min": 0, "max": 7, "default": 0,
+                    "description": "Filter type. Check FilterType for possible values."
+                },
+                {   "Parameter": "FrequencyHz", "Get": true, "Set": true, "min": 1, "max": 384000, "default": 1000,
+                    "description": "Frequency in Hz."
+                },
+                {   "Parameter": "OutputGainDecibel", "Get": true, "Set": true, "min": -96, "max": 24, "default": 0,
+                    "description": "Decibel gain value for shelving and parametric filters."
+                },
+                {   "Parameter": "ResonancePercent", "Get": true, "Set": true, "min": 0.01, "max": 1, "default": 0.5,
+                    "description": "Resonance value for resonant filters (Q / 10)."
+                },
+                {   "Parameter": "Octave", "Get": true, "Set": true, "min": 0.05, "max": 5, "default": 0.5,
+                    "description": "Width in octave for bandlimited and parametric filters."
+                },
+                {   "Parameter": "SlopePercent", "Get": true, "Set": true, "min": 0.001, "max": 1, "default": 0.001,
+                    "description": "Slope value for shelving filters. The maximum value has the steepest curve."
+                },
+                {   "Parameter": "FilterB0", "Get": true, "Set": true, "default": 0,
+                    "description": "Custom coefficient: b0/a0"
+                },
+                {   "Parameter": "FilterB1", "Get": true, "Set": true, "default": 0,
+                    "description": "Custom coefficient: b1/a0"
+                },
+                {   "Parameter": "FilterB2", "Get": true, "Set": true, "default": 0,
+                    "description": "Custom coefficient: b2/a0"
+                },
+                {   "Parameter": "FilterA1", "Get": true, "Set": true, "default": 0,
+                    "description": "Custom coefficient: a1/a0"
+                },
+                {   "Parameter": "FilterA2", "Get": true, "Set": true, "default": 0,
+                    "description": "Custom coefficient: a2/a0"
+                },
+                {   "Parameter": "Reset", "Get": false, "Set": true, "min": 0, "max": 1,
+                    "description": "Reset the internal state of the effect and immediately apply all parameters."
+                }
+            ]
+        },
+        {
+            "ObjectType": "Echo",
+            "description": "Delay - echo effect.",
+            "parameters": [
+                {   "Parameter": "OnOff", "Get": true, "Set": true, "min": 0, "max": 1, "default": 0,
+                    "description": "Turns the effect on/off. The actual switch will happen on the next Process() call for smooth, audio-artifact free operation."
+                },
+                {   "Parameter": "DryPercent", "Get": true, "Set": true, "min": 0, "max": 1, "default": 1,
+                    "description": "Dry."
+                },
+                {   "Parameter": "WetPercent", "Get": true, "Set": true, "min": 0, "max": 1, "default": 0.5,
+                    "description": "Wet."
+                },
+                {   "Parameter": "MixPercent", "Get": true, "Set": true, "min": 0, "max": 1, "default": 0.5,
+                    "description": "Sets dry and wet simultaneously with a nice balanced power curve."
+                },
+                {   "Parameter": "BeatsPerMinute", "Get": true, "Set": true, "min": 40, "max": 250, "default": 128,
+                    "description": "Beats per minute, the base tempo of the echo."
+                },
+                {   "Parameter": "NumBeats", "Get": true, "Set": true, "min": 0.03125, "max": 2, "default": 0.5,
+                    "description": "Delay between the echo sounds in beats."
+                },
+                {   "Parameter": "DecayPercent", "Get": true, "Set": true, "min": 0, "max": 0.99, "default": 0.5,
+                    "description": "Decay factor of the echo sounds."
+                },
+                {   "Parameter": "Reset", "Get": false, "Set": true, "min": 0, "max": 1,
+                    "description": "Reset the internal state of the effect and immediately apply all parameters."
+                }
+            ]
+        },
+        {
+            "ObjectType": "EQ",
+            "description": "DJ 3 band equalizer with unique characteristics and total kills.",
+            "parameters": [
+                {   "Parameter": "OnOff", "Get": true, "Set": true, "min": 0, "max": 1, "default": 0,
+                    "description": "Turns the effect on/off. The actual switch will happen on the next Process() call for smooth, audio-artifact free operation."
+                },
+                {   "Parameter": "Low", "Get": true, "Set": true, "min": 0.01, "max": 8, "default": 1,
+                    "description": "Low. 1 is \"flat\", 2 is +6db. Kill is enabled under -40 db (0.01)."
+                },
+                {   "Parameter": "Mid", "Get": true, "Set": true, "min": 0.01, "max": 8, "default": 1,
+                    "description": "Mid. 1 is \"flat\", 2 is +6db. Kill is enabled under -40 db (0.01)."
+                },
+                {   "Parameter": "High", "Get": true, "Set": true, "min": 0.01, "max": 8, "default": 1,
+                    "description": "High. 1 is \"flat\", 2 is +6db. Kill is enabled under -40 db (0.01)."
+                },
+                {   "Parameter": "Reset", "Get": false, "Set": true, "min": 0, "max": 1,
+                    "description": "Reset the internal state of the effect and immediately apply all parameters."
+                }
+            ]
+        },
+        {
+            "ObjectType": "Whoosh",
+            "description": "Filtered white noise effect.",
+            "parameters": [
+                {   "Parameter": "OnOff", "Get": true, "Set": true, "min": 0, "max": 1, "default": 0,
+                    "description": "Turns the effect on/off. The actual switch will happen on the next Process() call for smooth, audio-artifact free operation."
+                },
+                {   "Parameter": "WetPercent", "Get": true, "Set": true, "min": 0, "max": 1, "default": 0.4,
+                    "description": "White noise signal volume."
+                },
+                {   "Parameter": "FrequencyHz", "Get": true, "Set": true, "min": 20, "max": 20000, "default": 500,
+                    "description": "Frequency Hz."
+                },
+                {   "Parameter": "Reset", "Get": false, "Set": true, "min": 0, "max": 1,
+                    "description": "Reset the internal state of the effect and immediately apply all parameters."
+                }
+            ]
+        },
+        {
+            "ObjectType": "Flanger",
+            "description": "The jet sound effect.",
+            "parameters": [
+                {   "Parameter": "OnOff", "Get": true, "Set": true, "min": 0, "max": 1, "default": 0,
+                    "description": "Turns the effect on/off. The actual switch will happen on the next Process() call for smooth, audio-artifact free operation."
+                },
+                {   "Parameter": "WetPercent", "Get": true, "Set": true, "min": 0, "max": 1, "default": 0.7,
+                    "description": "Wet signal mixed into the output."
+                },
+                {   "Parameter": "DepthPercent", "Get": true, "Set": true, "min": 0, "max": 1, "default": 0.16,
+                    "description": "How far the flanger deviates from the input sound. 0 is 0.3 ms, 1 is 8 ms."
+                },
+                {   "Parameter": "NumBeats", "Get": true, "Set": true, "min": 0.25, "max": 128, "default": 16,
+                    "description": "Length in beats between the \"lowest\" and the \"highest\" jet sound."
+                },
+                {   "Parameter": "BeatsPerMinute", "Get": true, "Set": true, "min": 40, "max": 250, "default": 128,
+                    "description": "Bpm of the current audio."
+                },
+                {   "Parameter": "Reset", "Get": false, "Set": true, "min": 0, "max": 1,
+                    "description": "Reset the internal state of the effect and immediately apply all parameters."
+                }
+            ]
+        },
+        {
+            "ObjectType": "Clipper",
+            "description": "Soft or hard clipping with adjustable levels and Nan+Infinity floating point correction.",
+            "parameters": [
+                {   "Parameter": "SoftKnee", "Get": true, "Set": true, "min": 0, "max": 1, "default": 1,
+                    "description": "Soft knee (1) or hard knee (0)."
+                },
+                {   "Parameter": "ThresholdDecibel", "Get": true, "Set": true, "min": -100, "max": 48, "default": -6,
+                    "description": "Audio below this will be unchanged, above this will be attenuated."
+                },
+                {   "Parameter": "CeilingDecibel", "Get": true, "Set": true, "min": -48, "max": 48, "default": 0,
+                    "description": "Audio will reach 1.0f at this point."
+                },
+                {   "Parameter": "Reset", "Get": false, "Set": true, "min": 0, "max": 1,
+                    "description": "Reset the internal state of the effect and immediately apply all parameters."
+                }
+            ]
+        },
+        {
+            "ObjectType": "Limiter",
+            "description": "A limiter with optional look-ahead.",
+            "parameters": [
+                {   "Parameter": "OnOff", "Get": true, "Set": true, "min": 0, "max": 1, "default": 0,
+                    "description": "Turns the effect on/off. The actual switch will happen on the next Process() call for smooth, audio-artifact free operation."
+                },
+                {   "Parameter": "CeilingDecibel", "Get": true, "Set": true, "min": -40, "max": 12, "default": 0,
+                    "description": "Ceiling in decibels."
+                },
+                {   "Parameter": "ThresholdDecibel", "Get": true, "Set": true, "min": -40, "max": 12, "default": 0,
+                    "description": "Threshold in decibels."
+                },
+                {   "Parameter": "AttackSeconds", "Get": true, "Set": true, "min": 0.0001, "max": 1, "default": 0.001,
+                    "description": "Attack in seconds (not milliseconds!). The dfault is 1ms."
+                },
+                {   "Parameter": "ReleaseSeconds", "Get": true, "Set": true, "min": 0.001, "max": 1, "default": 0.05,
+                    "description": "Release in seconds (not milliseconds!). The default is 50 ms."
+                },
+                {   "Parameter": "LookAheadMs", "Get": true, "Set": true, "min": 0, "max": 10, "default": 0.7,
+                    "description": "Look ahead in milliseconds. 0 means no look ahead."
+                },
+                {   "Parameter": "GainReductionDecibel", "Get": true, "Set": false,
+                    "description": "Maximum gain reduction in decibels since the last Get() of this parameter."
+                },
+                {   "Parameter": "Reset", "Get": false, "Set": true, "min": 0, "max": 1,
+                    "description": "Reset the internal state of the effect and immediately apply all parameters."
+                }
+            ]
+        },
+        {
+            "ObjectType": "Compressor",
+            "description": "A compressor with adjustable knee.",
+            "parameters": [
+                {   "Parameter": "OnOff", "Get": true, "Set": true, "min": 0, "max": 1, "default": 0,
+                    "description": "Turns the effect on/off. The actual switch will happen on the next Process() call for smooth, audio-artifact free operation."
+                },
+                {   "Parameter": "InputGainDecibel", "Get": true, "Set": true, "min": -24, "max": 24, "default": 0,
+                    "description": "Input gain in decibels."
+                },
+                {   "Parameter": "OutputGainDecibel", "Get": true, "Set": true, "min": -24, "max": 24, "default": 0,
+                    "description": "Output gain in decibels."
+                },
+                {   "Parameter": "WetPercent", "Get": true, "Set": true, "min": 0, "max": 1, "default": 1,
+                    "description": "wet."
+                },
+                {   "Parameter": "AttackSeconds", "Get": true, "Set": true, "min": 0, "max": 1, "default": 0.003,
+                    "description": "Attack in seconds (not milliseconds!). The default is 3 ms."
+                },
+                {   "Parameter": "HoldSeconds", "Get": true, "Set": true, "min": 0, "max": 1, "default": 0.005,
+                    "description": "Hold segment before release starts, useful to limit unwanted noise with fast rates. 0 to 1 second (not millisecond)."
+                },
+                {   "Parameter": "ReleaseSeconds", "Get": true, "Set": true, "min": 0.1, "max": 4, "default": 0.3,
+                    "description": "Release in seconds (not milliseconds!). The default is 300 ms."
+                },
+                {   "Parameter": "KneeWidthDecibel", "Get": true, "Set": true, "min": 0.001, "max": 12, "default": 0.001,
+                    "description": "Width of soft knee in decibels."
+                },
+                {   "Parameter": "Ratio", "Get": true, "Set": true, "min": 1.5, "max": 10, "default": 3,
+                    "description": "Ratio."
+                },
+                {   "Parameter": "ThresholdDecibel", "Get": true, "Set": true, "min": -60, "max": 0, "default": 0,
+                    "description": "Threshold in decibels."
+                },
+                {   "Parameter": "AutoGain", "Get": true, "Set": true, "min": 0, "max": 1, "default": 0,
+                    "description": "If set to 1, gain is set relative to compressor output at 0dB (useful in digital environments)."
+                },
+                {   "Parameter": "GainReductionDecibel", "Get": true, "Set": false,
+                    "description": "Maximum gain reduction in decibels since the last Get() of this parameter."
+                },
+                {   "Parameter": "Reset", "Get": false, "Set": true, "min": 0, "max": 1,
+                    "description": "Reset the internal state of the effect and immediately apply all parameters."
+                }
+            ]
+        },
+        {
+            "ObjectType": "Reverb",
+            "description": "Reverb effect.",
+            "parameters": [
+                {   "Parameter": "OnOff", "Get": true, "Set": true, "min": 0, "max": 1, "default": 0,
+                    "description": "Turns the effect on/off. The actual switch will happen on the next Process() call for smooth, audio-artifact free operation."
+                },
+                {   "Parameter": "DryPercent", "Get": true, "Set": true, "min": 0, "max": 1, "default": 0.99,
+                    "description": "Dry."
+                },
+                {   "Parameter": "WetPercent", "Get": true, "Set": true, "min": 0, "max": 1, "default": 0.58,
+                    "description": "Wet."
+                },
+                {   "Parameter": "MixPercent", "Get": true, "Set": true, "min": 0, "max": 1, "default": 0.4,
+                    "description": "Sets dry and wet simultaneously with a nice balanced power curve."
+                },
+                {   "Parameter": "WidthPercent", "Get": true, "Set": true, "min": 0, "max": 1, "default": 1,
+                    "description": "Stereo width of the reverberation."
+                },
+                {   "Parameter": "DampPercent", "Get": true, "Set": true, "min": 0, "max": 1, "default": 0.5,
+                    "description": "Used to control the absorption of high frequencies in the reverb. More absorption of high frequencies means higher damping values. The tail of the reverb will lose high frequencies as they bounce around softer surfaces like halls and result in warmer sounds."
+                },
+                {   "Parameter": "DecayPercent", "Get": true, "Set": true, "min": 0, "max": 1, "default": 0.8,
+                    "description": "Room size controls the scale of the decay time and reflections found in the physical characteristics of living spaces, and studios. These unique attributes will simulate the expected behavior of acoustic environments. A larger room size typically results in longer reverb time."
+                },
+                {   "Parameter": "DelayMs", "Get": true, "Set": true, "min": 0, "max": 500, "default": 0,
+                    "description": "Pre-delay in milliseconds. The length of time it takes for a sound wave to leave its source and create its first reflection is determined by the pre-delay. This property controls the offset of reverb from the dry signal. An increase in pre-delay can result in a feeling of a bigger space."
+                },
+                {   "Parameter": "LowCutHz", "Get": true, "Set": true, "min": 0, "max": 1000, "default": 0,
+                    "description": "Frequency of the low cut in Hz (-12 db point). Controls the low frequency build up generated from the reverb. Default: 0 (no low frequency cut)."
+                },
+                {   "Parameter": "Reset", "Get": false, "Set": true, "min": 0, "max": 1,
+                    "description": "Reset the internal state of the effect and immediately apply all parameters."
+                }
+            ]
+        },
+        {
+            "ObjectType": "Delay",
+            "description": "Delays audio by some time.",
+            "parameters": [
+                {   "Parameter": "OnOff", "Get": true, "Set": true, "min": 0, "max": 1, "default": 0,
+                    "description": "Turns the effect on/off. The actual switch will happen on the next Process() call for smooth, audio-artifact free operation."
+                },
+                {   "Parameter": "DelayMs", "Get": true, "Set": true, "min": 0, "max": 1000, "default": 0,
+                    "description": "Delay in milliseconds, maximum is set by MaxDelayMs."
+                },
+                {   "Parameter": "MaxDelayMs", "Get": true, "Set": true, "min": 3, "max": 1000, "default": 10,
+                    "description": "Maximum delay in milliseconds. Higher values increase memory usage."
+                },
+                {   "Parameter": "Reset", "Get": false, "Set": true, "min": 0, "max": 1,
+                    "description": "Reset the internal state of the effect and immediately apply all parameters."
+                }
+            ]
+        },
+        {
+            "ObjectType": "Player",
+            "description": "A complete audio player with all the features of a Pioneer CDJ, including looping, scratching, jog wheel handling, tempo with time stretching, pitch shifting, stem separation, synchronization and more.",
+            "parameters": [
+                {   "Parameter": "PlaybackRate", "Get": true, "Set": true, "min": 0.00001, "default": 1,
+                    "description": "Playback rate."
+                },
+                {   "Parameter": "TimeStretching", "Get": true, "Set": true, "min": 0, "max": 1, "default": 1,
+                    "description": "Time-stretching on/off."
+                },
+                {   "Parameter": "FormantCorrectionPercent", "Get": true, "Set": true, "min": 0, "max": 1, "default": 0,
+                    "description": "Amount of formant correction."
+                },
+                {   "Parameter": "OriginalBPM", "Get": true, "Set": true, "min": 0, "max": 300, "default": 0,
+                    "description": "Original bpm of the current music. There is no auto-bpm detection inside, this must be set to a correct value for syncing. Any value below 20 will be automatically set to 0. Default: 0 (no bpm value known)."
+                },
+                {   "Parameter": "FixDoubleOrHalfBPM", "Get": true, "Set": true, "min": 0, "max": 1, "default": 0,
+                    "description": "If set to 1 and playbackRate is above 1.4 or below 0.6, it will sync the tempo as half or double. Default: 0 (off)."
+                },
+                {   "Parameter": "FirstBeatMs", "Get": true, "Set": true, "default": 0,
+                    "description": "Start position of the beatgrid in milliseconds. Must be set to a correct value for syncing."
+                },
+                {   "Parameter": "DefaultQuantum", "Get": true, "Set": true, "min": 0, "default": 1,
+                    "description": "Sets the quantum for quantized synchronization. Example: 4 means 4 beats."
+                },
+                {   "Parameter": "SyncMode", "Get": true, "Set": true, "min": 0, "max": 2, "default": 0,
+                    "description": "Sync mode: 0 - none, 1 - tempo, 2 - tempo and beat."
+                },
+                {   "Parameter": "PitchShiftCents", "Get": true, "Set": true, "min": -2400, "max": 2400, "default": 0,
+                    "description": "Pitch shift cents, from -2400 (two octaves down) to 2400 (two octaves up). Prefer multiples of 100 between -1200 and 1200 to decrease CPU load. Default: 0 (no pitch shift)."
+                },
+                {   "Parameter": "LoopOnEnd", "Get": true, "Set": true, "min": 0, "max": 1, "default": 0,
+                    "description": "If set to 1, jumps back and continues playback, playback stops otherwise."
+                },
+                {   "Parameter": "ReverseToForwardAtLoopStart", "Get": true, "Set": true, "min": 0, "max": 1, "default": 0,
+                    "description": "If this is set to 1 with playing backwards and looping, then reaching the beginning of the loop will change playback direction to forwards."
+                },
+                {   "Parameter": "TimeStretchingSound", "Get": true, "Set": true, "min": 0, "max": 2, "default": 1,
+                    "description": "Sound parameter of the internal TimeStretcher instance."
+                },
+                {   "Parameter": "OpenState", "Get": true, "Set": false, "default": 0,
+                    "description": "Latest open/close event state (check OpenState: None, Opening, OpenFailed, Opened, Closed). This method should be used in a periodically running code, at one place only, because it returns a specific event just once per Open() call. Best to be used in a UI loop."
+                },
+                {   "Parameter": "AtTheEnd", "Get": true, "Set": false, "min": 0, "max": 0, "default": 0,
+                    "description": "Returns 1 if end-of-file has been reached recently (will never indicate end-of-file if LoopOnEnd is enabled). This method should be used in a periodically running code at one place only, because it returns a specific end-of-file event just once. Best to be used in a UI loop."
+                },
+                {   "Parameter": "IsBuffering", "Get": true, "Set": false, "min": 0, "max": 1, "default": 0,
+                    "description": "Indicates if the player is waiting for data (such as waiting for a network download)."
+                },
+                {   "Parameter": "StartMs", "Get": true, "Set": false, "default": 0,
+                    "description": "Length of the digital silence at the beginning of the file if Open() was called with the MeasureSilence flag, 0 otherwise."
+                },
+                {   "Parameter": "PositionMs", "Get": true, "Set": true, "default": 0,
+                    "description": "Current playhead position in milliseconds. Not changed by any pending set position call, always accurate regardless of time-stretching and other transformations.",
+                    "SetArg0": "Any bitwise OR combination of SetPositionFlag values."
+                },
+                {   "Parameter": "DisplayPositionMs", "Get": true, "Set": true, "default": 0,
+                    "description": "Current position in milliseconds, immediately updated after the position is set. Use this for UI display."
+                },
+                {   "Parameter": "DisplayPositionPercent", "Get": true, "Set": true, "min": 0, "max": 1, "default": 0,
+                    "description": "Similar to DisplayPositionMs, but as a percentage."
+                },
+                {   "Parameter": "DisplayPositionSeconds", "Get": true, "Set": true, "default": 0,
+                    "description": "Similar to DisplayPositionMs, but as seconds elapsed."
+                },
+                {   "Parameter": "PositionAfterSlipModeMs", "Get": true, "Set": false, "default": 0,
+                    "description": "Position in milliseconds where the player will continue playback after slip mode ends."
+                },
+                {   "Parameter": "DurationMs", "Get": true, "Set": false, "default": 0,
+                    "description": "Duration of the current track in milliseconds."
+                },
+                {   "Parameter": "DurationSeconds", "Get": true, "Set": false, "default": 0,
+                    "description": "Duration of the current track in seconds."
+                },
+                {   "Parameter": "Play", "Get": true, "Set": true, "min": 0, "max": 1, "default": 0,
+                    "description": "Sets or indicates if the player is playing or paused."
+                },
+                {   "Parameter": "IsStems", "Get": true, "Set": false, "min": 0, "max": 1, "default": 0,
+                    "description": "Returns 1 if a Native Instruments Stems file was loaded or the output is stems separated."
+                },
+                {   "Parameter": "BufferedPercent", "Get": true, "Set": false, "min": 0, "max": 1, "default": 0,
+                    "description": "How much audio is already buffered. Will always be 1 for non-network sources (such as local files)."
+                },
+                {   "Parameter": "BeatsPerMinute", "Get": true, "Set": true, "min": 0, "default": 0,
+                    "description": "Current bpm of the track (as changed by the playback rate)."
+                },
+                {   "Parameter": "MsElapsedSinceLastBeat", "Get": true, "Set": true, "min": 0, "default": 0,
+                    "description": "How many milliseconds elapsed since the last beat."
+                },
+                {   "Parameter": "BeatIndex", "Get": true, "Set": false, "min": 0, "max": 4.9999, "default": 0,
+                    "description": "Which beat has just happened. Possible values: 0 (unknown), 1 - 1.999: first beat, 2 - 2.999: second beat, 3 - 3.999: third beat, 4 - 4.999: fourth beat."
+                },
+                {   "Parameter": "Phase", "Get": true, "Set": true, "min": -1, "max": 1, "default": -1,
+                    "description": "Phase for quantized synchronization, between 0 (beginning of the quantum) and 1 (end of the quantum), or -1 if unknown."
+                },
+                {   "Parameter": "Quantum", "Get": true, "Set": true, "min": 0, "default": 0,
+                    "description": "Quantum for quantized synchronization, such as 2 for two beats, 4 for four beats, etc..."
+                },
+                {   "Parameter": "MsRemainingToSyncEvent", "Get": true, "Set": false, "min": 0, "default": 0,
+                    "description": "If the player is waiting to a synchronization event (such as synchronized playback start or restarting a loop), the return value indicates the time remaining in milliseconds (continuously updated). 0 means not waiting to such event."
+                },
+                {   "Parameter": "IsLooping", "Get": true, "Set": false, "min": 0, "max": 1, "default": 0,
+                    "description": "Indicates if looping is enabled."
+                },
+                {   "Parameter": "Reverse", "Get": true, "Set": true, "min": 0, "max": 1, "default": 0,
+                    "description": "If set to 1, the player is playing backwards.",
+                    "SetArg0": "Maximum slip ms."
+                },
+                {   "Parameter": "BendOffsetMs", "Get": true, "Set": true, "min": 0, "default": 0,
+                    "description": "Distance (in milliseconds) to the beatgrid while using pitch bend for correction."
+                },
+                {   "Parameter": "PitchBend", "Get": true, "Set": true, "min": -1, "max": 1, "default": 1,
+                    "description": "Get(): pitch bend percent (1 for no pitch bend, < 1 slower, > 1 faster). Set(): 0 to turn off pitch bend, -1 for slower, 1 for faster."
+                },
+                {   "Parameter": "IsSlip", "Get": true, "Set": false, "min": 0, "max": 1, "default": 0,
+                    "description": "Indicates if returning from scratching or reverse playback will maintain the playback position as if the player had never entered into scratching or reverse playback."
+                },
+                {   "Parameter": "IsScratching", "Get": true, "Set": false, "min": 0, "max": 1, "default": 0,
+                    "description": "Indicates if the player is in scratching mode."
+                },
+                {   "Parameter": "JogParameter", "Get": true, "Set": false, "default": 1000001,
+                    "description": "If jog wheel mode is 2 (parameter), returns with the current parameter typically in the range of -1 to 1, or more than 1000000 if there was no jog wheel movement. processStereo or processMulti updates this value, therefore it's recommended to read it after those calls were made, in the same thread."
+                },
+                {   "Parameter": "MaxPitchBendPercent", "Get": true, "Set": true, "min": 0.01, "max": 0.3, "default": 0.2,
+                    "description": "Maximum playback rate range for pitch bend, between 0.01f and 0.3f (1% and 30%)."
+                },
+                {   "Parameter": "PitchBendTimeStretching", "Get": true, "Set": true, "min": 0, "max": 1, "default": 0,
+                    "description": "Use time-stretching for pitch bend or not (0 makes it \"audible\")."
+                },
+                {   "Parameter": "PitchBendHoldMs", "Get": true, "Set": true, "min": 0, "default": 0,
+                    "description": "How long to maintain the pitch bend state. A value >= 1000 will hold until endContinuousPitchBend is called. A value < 40 will not \"ramp up\" pitch bend, but will apply it immediately."
+                },
+                {   "Parameter": "TicksPerTurn", "Get": true, "Set": true, "min": 0, "default": 3600,
+                    "description": "Sets the sensitivity of the virtual wheel. Use around 2300 for pixel-perfect touchscreen waveform control."
+                },
+                {   "Parameter": "IsPositionInLoop", "Get": true, "Set": false, "min": 0, "max": 1, "default": 0,
+                    "description": "Returns 1 if a position is inside the current loop.",
+                    "GetArg0": "The position to check in ms."
+                },
+                {   "Parameter": "TogglePlayPause", "Get": false, "Set": true, "min": 0, "max": 1,
+                    "description": "Toggle play/pause (no synchronization)."
+                },
+                {   "Parameter": "PlaySynchronizedToMs", "Get": false, "Set": true,
+                    "description": "Starts playback at a specific position. Play will return 0 and the position will not be updated until this function succeeds starting playback at the specified position."
+                },
+                {   "Parameter": "PlaySynchronized", "Get": false, "Set": true,
+                    "description": "Starts beat or tempo synchronized playback."
+                },
+                {   "Parameter": "EndScratch", "Get": false, "Set": true, "min": 0, "max": 1,
+                    "description": "Ends scratching. If value is 1, return to the playback state before scratching."
+                },
+                {   "Parameter": "ExitLoop", "Get": false, "Set": true, "min": 0, "max": 1,
+                    "description": "Exit from the current loop. If value is 1, starts synchronized playback."
+                },
+                {   "Parameter": "GainPercent", "Get": false, "Set": true, "min": 0,
+                    "description": "0 is silence, 1 is \"original volume\". Changes are automatically smoothed between consecutive processes.",
+                    "SetArg0": "The index of the stereo output channel pair (0-3)."
+                },
+                {   "Parameter": "CachePositionMs", "Get": false, "Set": true,
+                    "description": "Caches a position for zero latency seeking.",
+                    "SetArg0": "Point identifier. Use this to provide a custom identifier, so you can overwrite the same point later. Use 255 for a point with no identifier."
+                },
+                {   "Parameter": "ScratchPitch", "Get": false, "Set": true,
+                    "description": "Sets the current scratching speed.",
+                    "SetArg0": "Smoothing (0.05 - 1). If not used: 0.05."
+                },
+                {   "Parameter": "TurntableBreak", "Get": false, "Set": true, "min": 0,
+                    "description": "Turntable stop effect. Value is momentum: 0 to pause immediately.",
+                    "SetArg0": "Maximum slip ms."
+                },
+                {   "Parameter": "StartScratch", "Get": false, "Set": true, "min": 0, "max": 1,
+                    "description": "Direct turntable handling - call this when scratching starts. Set value to 1 to halt playback immediately.",
+                    "SetArg0": "Maximum slip ms."
+                },
+                {   "Parameter": "JogTouchEnd", "Get": false, "Set": true, "min": 0,
+                    "description": "Call this when the jog touch ends. Value is momentum: 0 to pause immediately.",
+                    "SetArg0": "Set 1 to begin playback in sync."
+                },
+                {   "Parameter": "JogTick", "Get": false, "Set": true,
+                    "description": "A jog wheel should send some \"ticks\" with the movement. A waveform's movement in pixels for example.",
+                    "SetArg0": "Set 1 to enable jog parameter mode."
+                },
+                {   "Parameter": "JogTouchBegin", "Get": false, "Set": true, "min": 0, "max": 2,
+                    "description": "\"Virtual jog wheel\" or \"virtual turntable\" handling. Value is jog wheel mode: 0 - scratch, 1 - pitch bend, 2 - parameter.",
+                    "SetArg0": "Maximum slip ms."
+                },
+                {   "Parameter": "MsDifference", "Get": true, "Set": false, "min": 0, "default": 0,
+                    "description": "Returns with the distance (in milliseconds) to a specific quantum and phase for quantized synchronization.",
+                    "GetArg0": "Quantum", "GetArg1": "Phase"
+                },
+                {   "Parameter": "Loop", "Get": false, "Set": true,
+                    "description": "Loop between two points. Set() value: start ms.",
+                    "SetArg0": "Loop length ms.", "SetArg1": "PointID to cache the loop start (or set to 255 if you don't care).", "SetArg2": "Number of times to loop. 0 means: until ExitLoop.", "SetArg3": "Flags, see LoopFlag."
+                },
+                {   "Parameter": "MinTimeStretchRate", "Get": true, "Set": true, "min": 0.01, "max": 0.75, "default": 0.501,
+                    "description": "Will not time-stretch but resample below this playback rate."
+                },
+                {   "Parameter": "MaxTimeStretchRate", "Get": true, "Set": true, "min": 1.25, "max": 4, "default": 2,
+                    "description": "Will not time-stretch but resample above this playback rate."
+                },
+                {   "Parameter": "NegativeSeconds", "Get": true, "Set": true, "min": 0, "max": 120, "default": 0,
+                    "description": "The number of seconds of silence in the negative direction, before the beginning of the track."
+                },
+                {   "Parameter": "BufferSizeSeconds", "Get": true, "Set": true, "min": 2, "max": 10, "default": 2,
+                    "description": "The number of seconds to buffer internally for playback and cached points. Use this before Open() to take effect."
+                }
+            ], 
+            "stringparameters": [
+                { "StringParameter": "ErrorMessage", "description": "A human readable error string or NULL on no error." }
+            ]
+        },
+        {
+            "ObjectType": "TimeStretcher",
+            "description": "Changes the tempo without changing the pitch, or just the pitch without changing the tempo, or both simultaneously.",
+            "parameters": [
+                {   "Parameter": "PlaybackRate", "Get": true, "Set": true, "min": 0.01, "max": 4, "default": 1,
+                    "description": "Time stretching rate (tempo), from 0.01 to 4. 1 means no time stretching."
+                },
+                {   "Parameter": "PitchShiftCents", "Get": true, "Set": true, "min": -2400, "max": 2400, "default": 0,
+                    "description": "Pitch shift cents, from -2400 (two octaves down) to 2400 (two octaves up). Prefer multiples of 100 between -1200 and 1200 to decrease CPU load. Default: 0 (no pitch shift)."
+                },
+                {   "Parameter": "TimeStretchingSound", "Get": true, "Set": true, "min": 0, "max": 2, "default": 1,
+                    "description": "Valid values are: 0 (best to save CPU with slightly lower audio quality), 1 (best for DJ apps, modern and \"complete\" music), 2 (best for instrumental loops and single instruments)."
+                },
+                {   "Parameter": "FormantCorrectionPercent", "Get": true, "Set": true, "min": 0, "max": 1, "default": 0,
+                    "description": "Amount of formant correction."
+                },
+                {   "Parameter": "CompensateStartLatency", "Get": true, "Set": true, "min": 0, "max": 1, "default": 1,
+                    "description": "Maintain precise timing when the time-stretcher turns on. Useful for all use-cases except when the audio is heavily manipulated with some resampler (such as scratching)."
+                },
+                {   "Parameter": "InputFramesNeeded", "Get": true, "Set": false, "min": 0,
+                    "description": "How many frames of input should be provided to the time stretcher to produce some output."
+                },
+                {   "Parameter": "FramesCreated", "Get": true, "Set": false, "min": 0,
+                    "description": "How many frames of output is available."
+                },
+                {   "Parameter": "GainPercent", "Get": false, "Set": true, "min": 0,
+                    "description": "0 is silence, 1 is \"original volume\". Changes are automatically smoothed between consecutive processes.",
+                    "SetArg0": "The index of the stereo output channel pair (0-3)."
+                },
+                {   "Parameter": "Reset", "Get": false, "Set": true, "min": 0, "max": 1,
+                    "description": "Reset all internals, sets the instance as good as new."
+                },
+                {   "Parameter": "Initialize", "Get": false, "Set": true,
+                    "description": "Set the maximum number of stereo channel pairs, right after Create(). Value: 1-32."
+                }
+            ]
+        },
+        {
+            "ObjectType": "FrequencyDomain",
+            "description": "Transforms between time-domain and frequency-domain, including buffering, windowing and overlap handling.",
+            "parameters": [
+                {   "Parameter": "InputFramesNeeded", "Get": true, "Set": false, "min": 0,
+                    "description": "How many frames of input should be provided to produce some output. Max: fft size."
+                },
+                {   "Parameter": "Reset", "Get": false, "Set": true, "min": 0, "max": 1,
+                    "description": "Reset all internals, sets the instance as good as new."
+                },
+                {   "Parameter": "AdvanceFrames", "Get": false, "Set": true, "min": 0, "default": 0,
+                    "description": "For advanced use, if you know how window overlapping works. Use 0 (the default value) otherwise for a 4:1 overlap (good compromise in audio quality)."
+                },
+                {   "Parameter": "Initialize", "Get": false, "Set": true,
+                    "description": "Set the main parameters right after Create(). Set() value: FFT log size, between 8 and 13 (FFT 256 - 8192). 11 provides a good compromise in precision (~22 Hz per bin), CPU load and time-domain event sensitivity.",
+                    "SetArg0": "Maximum number of windows to keep (4 - 64).", "SetArg1": "Pi can be translated to any value (Google: the tau manifesto). Keep it at 0 for M_PI.", "SetArg2": "Polar (1) or complex (0).", "SetArg3": "Maximum number of stereo channel pairs to handle (1 - 4). Affects memory consumption."
+                }
+            ]
+        },
+        {
+            "ObjectType": "Resampler",
+            "description": "Linear or 6-point high quality resampler and audio reverser.",
+            "parameters": [
+                {   "Parameter": "PlaybackRate", "Get": true, "Set": true, "default": 1,
+                    "description": "Default: 1.0f. If equals to 1, Process() is \"transparent\" without any effect on audio quality."
+                },
+                {   "Parameter": "PlaybackRateIncrease", "Get": true, "Set": true, "min": -100, "max": 100, "default": 0,
+                    "description": "Changes rate smoothly during Process(). Useful for scratching or super smooth rate changes. After Process() rate will be changed, but may or may not be precisely equal to the desired target value."
+                },
+                {   "Parameter": "HighQuality", "Get": true, "Set": true, "min": 0, "max": 1, "default": 0,
+                    "description": "Enables more sophisticated processing to reduce interpolation noise. Good for scratching for example, but not recommended for continous music playback above 0.5 rate."
+                },
+                {   "Parameter": "FramesCreated", "Get": true, "Set": false, "min": 0,
+                    "description": "Number of output frames."
+                },
+                {   "Parameter": "Reverse", "Get": true, "Set": true, "min": 0, "max": 1, "default": 0,
+                    "description": "If 1, the output will be backwards (reverse playback)."
+                },
+                {   "Parameter": "Reset", "Get": false, "Set": true, "min": 0, "max": 1,
+                    "description": "Reset all internals. Doesn't change rate."
+                }
+            ]
+        },
+        {
+            "ObjectType": "Decoder",
+            "description": "Audio decoder into raw PCM audio and metadata reader, handling WAV, AIFF, MP3, AAC, ALAC and FLAC.",
+            "parameters": [
+                {   "Parameter": "DurationFrames", "Get": true, "Set": false, "min": 0, "default": 0,
+                    "description": "Duration of the current file in audio frames."
+                },
+                {   "Parameter": "DurationSeconds", "Get": true, "Set": false, "default": 0,
+                    "description": "Duration of the current file in seconds."
+                },
+                {   "Parameter": "SamplerateHz", "Get": true, "Set": false, "min": 0, "default": 0,
+                    "description": "Sample rate of the current file."
+                },
+                {   "Parameter": "Format", "Get": true, "Set": false, "min": -1, "max": 6, "default": -1,
+                    "description": "Format of the current file. Returns an AudioFormat."
+                },
+                {   "Parameter": "FramesPerPacket", "Get": true, "Set": false, "min": 0, "default": 0,
+                    "description": "Number of audio frames in one chunk of the source file. For example: MP3 files store 1152 audio frames in a chunk."
+                },
+                {   "Parameter": "BufferedPercent", "Get": true, "Set": false, "min": 0, "max": 1, "default": 0,
+                    "description": "Indicates which part of the file has fast access. For local files it will always be 1."
+                },
+                {   "Parameter": "StartMs", "Get": true, "Set": false, "min": 0, "default": 0,
+                    "description": "Length of the digital silence at the beginning of the file if Open() was called with the MeasureSilence flag, 0 otherwise."
+                },
+                {   "Parameter": "PositionFrames", "Get": true, "Set": true,
+                    "description": "Current position in audio frames. The position may change after each Process() or a Set() to position."
+                },
+                {   "Parameter": "FramesCreated", "Get": true, "Set": false, "min": 0, "default": 0,
+                    "description": "A positive number above zero: the number of frames decoded."
+                },
+                {   "Parameter": "TrackIndex", "Get": true, "Set": false, "min": 0, "default": 0,
+                    "description": "Track index (track field or TRCK)."
+                },
+                {   "Parameter": "ImageSizeBytes", "Get": true, "Set": false, "min": 0, "default": 0,
+                    "description": "Size of the image in the image tag. May return 0."
+                },
+                {   "Parameter": "ID3FrameDataSizeBytes", "Get": true, "Set": false, "min": 0, "default": 0,
+                    "description": "Reads the next ID3 frame and returns with its data size or 0 if finished reading."
+                },
+                {   "Parameter": "BeatsPerMinute", "Get": true, "Set": false, "min": 0, "default": 0,
+                    "description": "Bpm value of the \"best\" bpm tag (TBP, TBPM, QT atom). May return 0."
+                },
+                {   "Parameter": "PositionFramesPrecise", "Get": false, "Set": true,
+                    "description": "Jumps to a specific position."
+                }
+            ], 
+            "stringparameters": [
+                { "StringParameter": "StemsJSON", "description": "JSON metadata string for the Native Instruments Stems format, or NULL." },
+                { "StringParameter": "ErrorMessage", "description": "Human readable error string." },
+                { "StringParameter": "ID3FrameName", "description": "Current ID3 frame name (four char)." },
+                { "StringParameter": "Artist", "description": "Contents \"best\" artist tag (TP1-4, TPE1-4, QT atoms). May return NULL." },
+                { "StringParameter": "Title", "description": "Contents \"best\" title tag (TT1-3, TIT1-3, QT atoms). May return NULL." },
+                { "StringParameter": "Album", "description": "Contents of the TALB tag (or QT atom). May return NULL." },
+                { "StringParameter": "ID3FrameDataAsString", "description": "Decoded text inside the current textual ID3 frame, automatically handling encoding and skipping frame-specific language and description fields. Returns NULL for non-text and compound frames." }
+            ], 
+            "dataparameters": [
+                { "DataParameter": "ID3FrameData", "description": "Raw data of the current ID3 frame." },
+                { "DataParameter": "Image", "description": "Contents \"best\" image tag (PIC, APIC, QT atom). May return NULL." }
+            ]
+        },
+        {
+            "ObjectType": "AutoTune",
+            "description": "Automatic vocal pitch correction.",
+            "parameters": [
+                {   "Parameter": "Scale", "Get": true, "Set": true, "min": 0, "max": 3434, "default": 0,
+                    "description": "Music scale. Default: CHROMATIC (all twelve keys of the octave are allowed). Check AutoTuneScale for possible values."
+                },
+                {   "Parameter": "Range", "Get": true, "Set": true, "min": 0, "max": 4, "default": 0,
+                    "description": "Vocal range for pitch detection. Values: 0 (wide, 40-3000 Hz), 1 (bass, 40-350 Hz), 2 (tenor 100-600 Hz), 3 (alto, 150-1400 Hz), 4 (soprano, 200-3000 Hz)."
+                },
+                {   "Parameter": "Speed", "Get": true, "Set": true, "min": 0, "max": 2, "default": 2,
+                    "description": "Speed for tune correction (0 slow, 2 fastest)."
+                },
+                {   "Parameter": "Clamp", "Get": true, "Set": true, "min": 0, "max": 2, "default": 1,
+                    "description": "Controls the incoming pitch variance threshold for switching to a new note for the output. Values: 0 - off, 1 - loose, 2 - tight."
+                },
+                {   "Parameter": "FrequencyHz", "Get": true, "Set": true, "min": 410, "max": 470, "default": 440,
+                    "description": "Frequency for middle A."
+                },
+                {   "Parameter": "Reset", "Get": false, "Set": true, "min": 0, "max": 1,
+                    "description": "Set all internals to initial state."
+                }
+            ]
+        },
+        {
+            "ObjectType": "AEC",
+            "description": "Acoustic Echo Cancellation.",
+            "parameters": [
+                {   "Parameter": "Distance", "Get": true, "Set": true, "min": 0, "max": 3, "default": 0,
+                    "description": "Speaker to mic distance and room size. Approx values: 0 - phone, 1 - Studio, 2 - Room, 3 - Hall."
+                },
+                {   "Parameter": "DoubleTalkSensitivityPercent", "Get": true, "Set": true, "min": 0, "max": 1, "default": 0.5,
+                    "description": "Sensitivity for (double) talk detection. 0: always adapt."
+                },
+                {   "Parameter": "Speed", "Get": true, "Set": true, "min": 0.1, "max": 1, "default": 0.5,
+                    "description": "Trade-off between audio quality and how quickly AEC adapts to a changing environment (such as moving away from the microphone). Minimum: 0.1 (high quality, slow adaptation), maximum: 1 (lower quality, quick adaptation)."
+                },
+                {   "Parameter": "Reset", "Get": false, "Set": true, "min": 0, "max": 1,
+                    "description": "Set all internals to initial state."
+                }
+            ]
+        },
+        {
+            "ObjectType": "BandpassFilterbank",
+            "description": "Multiple bandpass filters for real-time zero latency frequency analysis.",
+            "parameters": [
+                {   "Parameter": "NumBins", "Get": true, "Set": true, "min": 0, "default": 0,
+                    "description": "How many bins to create."
+                },
+                {   "Parameter": "FrequencyHz", "Get": true, "Set": true, "min": 1, "max": 384000,
+                    "description": "Center frequency of a bin in Hz.",
+                    "GetArg0": "Frequency bin index.", "SetArg0": "Frequency bin index."
+                },
+                {   "Parameter": "Octave", "Get": true, "Set": true, "min": 0.01, "max": 5,
+                    "description": "Widths of a bin in octave (1 is one octave, 1.0 / 12.0 is one halfnote).",
+                    "GetArg0": "Frequency bin index.", "SetArg0": "Frequency bin index."
+                },
+                {   "Parameter": "Reset", "Get": false, "Set": true, "min": 0, "max": 1,
+                    "description": "Any bitwise OR combination of BandpassFilterbankResetFlag values to reset the accumulated values of each bin, and/or the sum, average and peak."
+                }
+            ]
+        },
+        {
+            "ObjectType": "Analyzer",
+            "description": "Performs bpm, beatgrid, key, loudness and peak detection. Provides waveform data (150 points/sec and 1 point/sec resolution).",
+            "parameters": [
+                {   "Parameter": "BeatsPerMinute", "Get": true, "Set": true, "default": 0,
+                    "description": "Beats per minute."
+                },
+                {   "Parameter": "FirstBeatMs", "Get": true, "Set": true, "min": 0, "default": 0,
+                    "description": "Set(): an estimated beat grid start value to help the algorithm. Get(): where the beatgrid starts (first beat) in milliseconds."
+                },
+                {   "Parameter": "MinBPM", "Get": true, "Set": true, "min": 10, "max": 300, "default": 60,
+                    "description": "Detected bpm will be more than or equal to this."
+                },
+                {   "Parameter": "MaxBPM", "Get": true, "Set": true, "min": 10, "max": 500, "default": 200,
+                    "description": "Detected bpm will be less than or equal to this."
+                },
+                {   "Parameter": "PeakDecibel", "Get": true, "Set": false, "max": 0, "default": 0,
+                    "description": "Peak volume in decibels."
+                },
+                {   "Parameter": "AverageDecibel", "Get": true, "Set": false, "max": 0,
+                    "description": "Average volume in decibels."
+                },
+                {   "Parameter": "LoudPartsAverageDecibel", "Get": true, "Set": false, "max": 0,
+                    "description": "Average volume in decibels, but only takes the loud parts of the song into account, the quiet parts are ignored."
+                },
+                {   "Parameter": "DurationSeconds", "Get": true, "Set": true, "min": 0, "max": 86400, "default": 0,
+                    "description": "Length in seconds of the audio input. The analyzer will not be able to process more audio than this."
+                },
+                {   "Parameter": "DurationFrames", "Get": true, "Set": false, "min": 0, "max": 12960000, "default": 0,
+                    "description": "Number of bytes in the peak, average, low, mid and high waveforms."
+                },
+                {   "Parameter": "KeyIndex", "Get": true, "Set": false, "min": -1, "max": 23, "default": -1,
+                    "description": "Dominant key (chord) of the music. 0..11 are major keys from A to G#, 12..23 are minor keys from A to G#, -1 if unknown. Check the static constants in this header for musical, Camelot and Open Key notations."
+                },
+                {   "Parameter": "SamplerateHz", "Get": false, "Set": true, "min": 1000, "max": 384000, "default": 0,
+                    "description": "Sample rate of the audio input."
+                }
+            ], 
+            "dataparameters": [
+                { "DataParameter": "OverviewWaveform", "description": "1 point/sec waveform data displaying the average volume in decibels. Useful for displaying the overall structure of a track. Each number is a signed byte (8-bits), representing one \"pixel\". Values are between -128 and 0, in decibels." },
+                { "DataParameter": "AverageWaveform", "description": "150 points/sec waveform data displaying the average volume. Each number is an unsigned byte (8-bits), representing one \"pixel\"." },
+                { "DataParameter": "PeakWaveform", "description": "150 points/sec waveform data displaying the peak volume. Each number is an unsigned byte (8-bits), representing one \"pixel\"." },
+                { "DataParameter": "LowWaveform", "description": "150 points/sec waveform data displaying the low frequencies below 200 Hz. Each number is an unsigned byte (8-bits), representing one \"pixel\"." },
+                { "DataParameter": "MidWaveform", "description": "150 points/sec waveform data displaying the mid frequencies between 200 and 1600 Hz. Each number is an unsigned byte (8-bits), representing one \"pixel\"." },
+                { "DataParameter": "HighWaveform", "description": "150 points/sec waveform data displaying the high frequencies above 1600 Hz. Each number is an unsigned byte (8-bits), representing one \"pixel\"." }
+            ]
+        },
+        {
+            "ObjectType": "Recorder",
+            "description": "Captures real-time audio into a WAV file with an optional tracklist.",
+            "parameters": [
+                {   "Parameter": "Fade", "Get": true, "Set": true, "min": 0, "max": 1, "default": 1,
+                    "description": "If set to 1, the recorder applies a fade-in at the beginning and a fade-out at the end of the recording. The fade is 64 audio frames long."
+                },
+                {   "Parameter": "AttackSeconds", "Get": true, "Set": true, "min": 0, "default": 0,
+                    "description": "Minimum length of the recording. If the number of recorded seconds is lower, then a file will not be saved."
+                },
+                {   "Parameter": "DurationSeconds", "Get": true, "Set": false, "min": 0, "default": 0,
+                    "description": "Seconds recorded so far."
+                }
+            ]
+        }
+    ],
+    "ObjectFunctions": [
+        {
+            "name": "YubyInit", "description": "Call this only once, when your application starts.",
+            "arguments": [ "String pointer to your license key." ]
+        },
+        {
+            "name": "Create", "description": "Create a Yuby object.",
+            "returns": "A pointer to the newly created object.",
+            "arguments": [ "ObjectType (example: Reverb)" ]
+        },
+        {
+            "name": "Delete", "description": "Delete a Yuby object.",
+            "arguments": [ "Pointer to the object." ]
+        },
+        {
+            "name": "Get", "description": "Get a numeric/bool Parameter of an Object.", "returns": "A number.",
+            "arguments": [ "Pointer to the object.", "Parameter", "Optional argument 0.", "Optional argument 1." ]
+        },
+        {
+            "name": "Set", "description": "Set a numeric/bool Parameter of an Object.", "returns": "Success/fail.",
+            "arguments": [ "Pointer to the object.", "Parameter", "Value", "Optional argument 0.", "Optional argument 1.", "Optional argument 2.", "Optional argument 3." ]
+        },
+        {
+            "name": "GetString", "description": "Get a StringParameter of an Object.", 
+            "returns": "A pointer to a string or 0. Yuby retains ownership of it.",
+            "arguments": [ "Pointer to the object.", "StringParameter" ]
+        },
+        {
+            "name": "GetStringTakeOwnership", "description": "Get a StringParameter of an Object.", 
+            "returns": "A pointer to a string or 0. You need to manage the ownership of the returned string, use free() to deallocate. Example use-case: extracting metadata from a large music library without tons of string copy.",
+            "arguments": [ "Pointer to the object.", "StringParameter" ]
+        },
+        {
+            "name": "GetData", "description": "Get a DataParameter of an Object.", 
+            "returns": "A pointer or 0. Yuby retains ownership of it.",
+            "arguments": [ "Pointer to the object.", "DataParameter" ]
+        },
+        {
+            "name": "GetDataTakeOwnership", "description": "Get a DataParameter of an Object.", 
+            "returns": "A pointer or 0. You need to manage the ownership of the returned data, use free() to deallocate.",
+            "arguments": [ "Pointer to the object.", "DataParameter" ]
+        },
+        {
+            "name": "Open", "description": "Open content (such as an audio file).",
+            "arguments": [ "Pointer to a Decoder or Player object.", "Pointer to the content: a path string or a pointer to data in memory.", "Start offset bytes in the file or from the data pointer. Use 0 for regular audio files.", "Length of the audio payload in the file or the size of the memory data, in bytes. Use 0 for regular audio files.", "Any bitwise OR combination of OpenFlag values.", "Optional pointer to a byte. An Open() can block for a long time and setting the value of this byte to 1 will cancel it." ]
+        },
+        {
+            "name": "Process", "description": "Process audio.",
+            "returns": "True if the audio in the output buffer was changed. False doesn't mean error, a turned off effect might not change the output for example.",
+            "arguments": [ "Pointer to the object.", "Pointer to audio input buffer (speaker/far-end for AEC).", "Pointer to sidechain audio input buffer. Set it to 0 for all objects, except: sidechain for Compressor (optional), microphone/near-end for AEC (mandatory).", "Pointer to output audio buffer.", "Current sample rate in Hz.", "Number of audio frames.", "Number of stereo channel pairs. "]
+        },
+        {
+            "name": "SetColorFx", "description": "Set the color fx for Echo and Delay, to add an additional flavor to the output.",
+            "arguments": [ "Pointer to the Echo or Delay object.", "Pointer to the other object, such as a Filter. A filtered echo tail sounds great!" ]
+        },
+        {
+            "name": "AddToTracklist", "description": "A recording may include a tracklist, which is a .txt file placed next to the recorded audio file. This method adds an entry to the tracklist.",
+            "arguments": [ "Pointer to the Recorder object.", "String pointer to artist or 0.", "String pointer to title or 0.", "When the current track begins to be audible in this recording, relative to when this function is called. For example, 0 means now, -10 means 10 seconds ago.", "If set to 1, Yuby takes the ownership of the artist and title strings." ]
+        },
+        {
+            "name": "CreatePlayerWithStemSeparator", "description": "Create a Player object with stems separation integrated (such as AudioShake or Demucs).",
+            "returns": "A pointer to the newly created Player object."
+        }
+    ],
+    "SimpleFunctions": [
+        {
+            "name": "add", "description": "output = inputA + inputB",
+            "arguments": [ "Pointer to input A.", "Pointer to input B.", "Pointer to output.", "Number of values to process." ]
+        },
+        {
+            "name": "addfour", "description": "output = inputA + inputB + inputC + inputD",
+            "arguments": [ "Pointer to input A.", "Pointer to input B.", "Pointer to input C.", "Pointer to input D.", "Pointer to output.", "Number of values to process." ]
+        },
+        {
+            "name": "peak", "description": "max(abs(values))",
+            "returns": "The peak absolute value.",
+            "arguments": [ "Pointer to input values.", "Number of values to process." ]
+        },
+        {
+            "name": "balance", "description": "left * left gain, right * right gain",
+            "arguments": [ "Pointer to stereo interleaved input.", "Pointer to stereo interleaved output. Can be equal to input. If getPeaks is true, it must have space for two additional floats after the audio output.", "Gain for the first frame on the left channel.", "Gain for the last frame on the left channel.", "Gain for the first frame on the right channel.", "Gain for the last frame on the right channel.", "Number of audio frames to process.", "If true, writes the left and right peak values after the audio output." ]
+        },
+        {
+            "name": "mul", "description": "output = input * gain",
+            "returns": "The multiplier value after processing.",
+            "arguments": [ "Pointer to stereo interleaved input.", "Pointer to stereo interleaved output. Can be equal to input.", "Multiplier for the first frame.", "Multiplier target after the last frame.", "Number of audio frames to process." ]
+        },
+        {
+            "name": "mulinc", "description": "output = input * gain",
+            "returns": "The multiplier value after processing.",
+            "arguments": [ "Pointer to stereo interleaved input.", "Pointer to stereo interleaved output. Can be equal to input.", "Multiplier for the first frame.", "Amount added to the multiplier after every frame.", "Number of audio frames to process." ]
+        },
+        {
+            "name": "multiply", "description": "output = input * gain",
+            "arguments": [ "Pointer to input values.", "Pointer to output values. Can be equal to input.", "Number of values to process.", "Multiplier." ]
+        },
+        {
+            "name": "muladd", "description": "output = inputA + inputB * gain",
+            "returns": "The multiplier value after processing.",
+            "arguments": [ "Pointer to stereo interleaved input A.", "Pointer to stereo interleaved input B.", "Pointer to stereo interleaved output.", "Multiplier for input B at the first frame.", "Multiplier target for input B after the last frame.", "Number of audio frames to process." ]
+        },
+        {
+            "name": "muladdinc", "description": "output = inputA + inputB * gain",
+            "returns": "The multiplier value after processing.",
+            "arguments": [ "Pointer to stereo interleaved input A.", "Pointer to stereo interleaved input B.", "Pointer to stereo interleaved output.", "Multiplier for input B at the first frame.", "Amount added to the multiplier after every frame.", "Number of audio frames to process." ]
+        },
+        {
+            "name": "cross", "description": "output = inputA * gainA + inputB * gainB",
+            "arguments": [ "Pointer to stereo interleaved input A.", "Pointer to stereo interleaved input B.", "Pointer to stereo interleaved output.", "Multiplier for input A at the first frame.", "Multiplier target for input A after the last frame.", "Multiplier for input B at the first frame.", "Multiplier target for input B after the last frame.", "Number of audio frames to process." ]
+        },
+        {
+            "name": "interleave", "description": "output[LRLRLR...] = left[LLL...] + right[RRR...]",
+            "arguments": [ "Pointer to left-channel input.", "Pointer to right-channel input.", "Pointer to stereo interleaved output.", "Number of audio frames to process." ]
+        },
+        {
+            "name": "interleaveadd", "description": "output[LRLRLR...] = input[LRLRLR...] + left[LLL...] + right[RRR...]",
+            "arguments": [ "Pointer to left-channel input.", "Pointer to right-channel input.", "Pointer to stereo interleaved input to add.", "Pointer to stereo interleaved output.", "Number of audio frames to process." ]
+        },
+        {
+            "name": "deinterleave", "description": "left[LLL...], right[RRR...] = input[LRLRLR...] * gain",
+            "arguments": [ "Pointer to stereo interleaved input.", "Pointer to left-channel output.", "Pointer to right-channel output.", "Number of audio frames to process.", "Multiplier applied to both output channels." ]
+        },
+        {
+            "name": "stereotomono", "description": "output[MONO] = input[LRLRLR...] * [left gain, right gain]",
+            "arguments": [ "Pointer to stereo interleaved input.", "Pointer to mono output.", "Gain for the first frame on the left channel.", "Gain for the last frame on the left channel.", "Gain for the first frame on the right channel.", "Gain for the last frame on the right channel.", "Number of audio frames to process." ]
+        },
+        {
+            "name": "stereotomidside", "description": "output[MSMSMS...] = input[LRLRLR...]",
+            "arguments": [ "Pointer to stereo interleaved input.", "Pointer to interleaved mid-side output. Can be equal to input.", "Number of audio frames to process." ]
+        },
+        {
+            "name": "midsidetostereo", "description": "output[LRLRLR...] = input[MSMSMS...]",
+            "arguments": [ "Pointer to interleaved mid-side input.", "Pointer to stereo interleaved output. Can be equal to input.", "Number of audio frames to process." ]
+        },
+        {
+            "name": "shortinttofloat", "description": "output 32-bit float = input 16-bit PCM",
+            "arguments": [ "Pointer to stereo interleaved 16-bit input.", "Pointer to stereo interleaved floating-point output.", "Number of audio frames to process." ]
+        },
+        {
+            "name": "floattoshortint", "description": "output 16-bit PCM = input 32-bit float",
+            "arguments": [ "Pointer to stereo interleaved floating-point input.", "Pointer to stereo interleaved 16-bit output.", "Number of audio frames to process." ]
+        },
+        {
+            "name": "fftComplex", "description": "Performs an in-place complex FFT using split real and imaginary buffers. Data packing is compatible with Apple's vDSP real FFT format.",
+            "arguments": [ "Pointer to the real part.", "Pointer to the imaginary part.", "Base-2 logarithm of the FFT size, from 4 to 12 (FFT sizes 16 to 4096).", "True for forward FFT, false for inverse FFT." ]
+        },
+        {
+            "name": "fftReal", "description": "Performs an in-place real FFT using split real and imaginary buffers. Data packing is compatible with Apple's vDSP real FFT format.",
+            "arguments": [ "Pointer to the real part.", "Pointer to the imaginary part.", "Base-2 logarithm of the FFT size, from 5 to 13 (FFT sizes 32 to 8192).", "True for forward FFT, false for inverse FFT." ]
+        },
+        {
+            "name": "fftPolar", "description": "Performs an in-place real FFT and converts between split-complex and magnitude-phase representations.",
+            "arguments": [ "Forward: real input - magnitude output. Inverse: magnitude input - real output.", "Forward: imaginary input - phase output. Inverse: phase input - imaginary output.", "Base-2 logarithm of the FFT size, from 5 to 13 (FFT sizes 32 to 8192).", "True for forward FFT, false for inverse FFT.", "Translates pi to this value. Use 0 for M_PI." ]
+        },
+        {
+            "name": "createWAV", "description": "Creates a 16-bit PCM WAV file.",
+            "returns": "A handle on success, or 0 on error.",
+            "arguments": [ "String pointer to the full filesystem path.", "Sample rate in Hz.", "Number of audio channels." ]
+        },
+        {
+            "name": "writeWAV", "description": "Writes 16-bit PCM audio data to a WAV file created by createWAV().",
+            "returns": "Success/fail.",
+            "arguments": [ "WAV handle returned by createWAV().", "Pointer to 16-bit PCM audio data.", "Number of bytes to write." ]
+        },
+        {
+            "name": "closeWAV", "description": "Finalizes the WAV header and closes the file. A regular file close is not sufficient to create a valid WAV file.",
+            "arguments": [ "WAV handle returned by createWAV()." ]
+        }
+    ]
+}

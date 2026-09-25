@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Yuby Demo</string>
+    <string name="play">Play</string>
+    <string name="pause">Pause</string>
+    <string name="mic_on">Mic On</string>
+    <string name="mic_off">Mic Off</string>
+    <string name="reverb_on">Reverb On</string>
+    <string name="reverb_off">Reverb Off</string>
+</resources>
