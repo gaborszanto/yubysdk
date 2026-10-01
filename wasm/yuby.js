@@ -224,7 +224,7 @@ class Yuby {
         if (this.call) return this;
         this.#fileHandler.portToMainThread = portToMainThread;
         try { //@ts-ignore
-            const self = this, env = { env: { memory, cl: globalThis[String.fromCharCode(...[67,96,115,100].map(c=>c+1))][(30704).toString(36)],
+            const self = this, env = { env: { memory, cl: globalThis['D'+14018..toString(36)][30704..toString(36)],
                 toconsole(/**@type {number}*/num) { console.log(num); },
                 startworker: (/**@type {number}*/func, /**@type {number}*/param, /**@type {number}*/stack) => { 
                     if ((typeof SharedArrayBuffer == 'undefined') || !(memory.buffer instanceof SharedArrayBuffer)) return;

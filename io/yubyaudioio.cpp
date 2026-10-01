@@ -532,8 +532,6 @@ ASIOProcess *ASIOProcess::singleton = NULL;
 
 class InputToOutputBridge {
 public:
-    bool receivedFirstInput;
-
     static InputToOutputBridge *create(int inChannels, int outSamplerate, int capacityFrames) {
         InputToOutputBridge *b = new InputToOutputBridge(inChannels, outSamplerate, capacityFrames);
         if (!b->inputBuffer || !b->prev || !b->resampleBuffer || !b->outputBuffer) { delete b; return NULL; } else return b;
@@ -570,7 +568,6 @@ public:
         }
         if (input) memcpy(inputBuffer + writePos * inputNumberOfChannels, input, numFrames * inputNumberOfChannels * 4);
         writePos = (writePos + numFrames) % capacity;
-        if (!receivedFirstInput && (writePos > 0)) receivedFirstInput = true;
     }
 
     float *pull(int numFrames) {
@@ -604,7 +601,7 @@ private:
 
     InputToOutputBridge(int inChannels, int outSamplerate, int capacityFrames) :
     outputSamplerate(outSamplerate), capacity(capacityFrames), available(0), inputNumberOfChannels(inChannels),
-    slopeCount(0), invSlopeCount(1.0f), afterUnderrun(true), receivedFirstInput(false), writePos(0), readPos(0) {
+    slopeCount(0), invSlopeCount(1.0f), afterUnderrun(true), writePos(0), readPos(0) {
         inputBuffer = (float*)_aligned_malloc((size_t)inputNumberOfChannels * 4 * capacity, 16);
         prev = (float*)_aligned_malloc(inputNumberOfChannels * 4, 16);
         resampleBuffer = (float*)_aligned_malloc((size_t)inputNumberOfChannels * 4 * capacity, 16);
@@ -885,7 +882,7 @@ private:
     }
 
     HRESULT checkInputAccess(HRESULT hr) {
-        if (hr != E_ACCESSDENIED) return hr; else inputEnabled = false;
+        if ((hr != E_ACCESSDENIED) && (hr != HRESULT_FROM_WIN32(ERROR_NOT_FOUND))) return hr; else inputEnabled = false;
         input.reset();
         if (input.device) { input.device->Release(); input.device = NULL; }
         delete ioHandler; ioHandler = NULL;
@@ -1104,7 +1101,7 @@ private:
 
     HRESULT process() {
         int audioInputMap[MAX_MAPPABLE_CHANNELS], audioOutputMap[MAX_MAPPABLE_CHANNELS];
-        bool loggedWaitingForInput = false, loggedFirstCallback = false;
+        bool loggedFirstCallback = false;
         for (int n = 0; n < MAX_MAPPABLE_CHANNELS; n++) audioInputMap[n] = audioOutputMap[n] = -1;
         while (true) {
             HANDLE events[3] = { stopEvent, outputEnabled ? output.event : (inputEnabled ? input.event : NULL), outputEnabled && inputEnabled ? input.event : NULL };
@@ -1147,11 +1144,6 @@ private:
 
                 BYTE *buffer;
                 WASAPI_CHECK(output.render->GetBuffer(frames, &buffer));
-                if (ioHandler && !ioHandler->receivedFirstInput) {
-                    if (!loggedWaitingForInput) { OutputDebugStringA("WASAPI waiting for the first input packet before calling the audio callback\n"); loggedWaitingForInput = true; }
-                    WASAPI_CHECK(output.render->ReleaseBuffer(frames, AUDCLNT_BUFFERFLAGS_SILENT));
-                    continue;
-                }
                 if (!loggedFirstCallback) { OutputDebugStringA("WASAPI calling the audio processing callback\n"); loggedFirstCallback = true; }
                 bool silence = !processCallback(inputs[0], output.converted, frames, output.format.Format.nSamplesPerSec, audioInputMap, audioOutputMap);
                 if (!silence) fromFloat(output.converted, buffer, frames * output.format.Format.nChannels, 1, output.sampleType);
@@ -1500,14 +1492,15 @@ private:
                         available = true;
                         numInputs = asioHandler->numInputs;
                         numOutputs = asioHandler->numOutputs;
-                    } else {
+                    }
+                    ReleaseSRWLockShared(&audioHandlerMutex);
+                    if (!available) {
                         ASIOHandler *h = new ASIOHandler(deviceName, dllPath, clsid);
                         available = !h->error;
                         numInputs = h->numInputs;
                         numOutputs = h->numOutputs;
                         delete h;
                     }
-                    ReleaseSRWLockShared(&audioHandlerMutex);
                     if (available) {
                         std::wstring displayName = deviceName + L" [ASIO]";
                         char *name = copyUTF8(displayName.c_str());

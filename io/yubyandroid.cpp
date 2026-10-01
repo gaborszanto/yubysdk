@@ -520,7 +520,10 @@ static void startLocked(audioProcessingCallback apc, void *clientdata, unsigned 
     }
     if (inputEnabled) {
         inputStream = openStream(AAUDIO_DIRECTION_INPUT, outputStream ? (int)audioSamplerate : AAUDIO_UNSPECIFIED, outputStream ? AAudioStream_getBufferCapacityInFrames(outputStream) * 2 : 0, outputStream ? nullptr : inputOnlyCallback);
-        if (inputStream == nullptr) { stopLocked(); return; }
+        if (inputStream && outputStream && (AAudioStream_requestStart(inputStream) != AAUDIO_OK)) stopAndCloseStream(&inputStream);
+        if (!inputStream && !outputStream) { stopLocked(); return; }
+    }
+    if (inputStream) {
         deviceInputChannels = (unsigned int)AAudioStream_getChannelCount(inputStream);
         AAudioStream_setBufferSizeInFrames(inputStream, AAudioStream_getBufferCapacityInFrames(inputStream));
         if (outputStream == nullptr) audioSamplerate = (unsigned int)AAudioStream_getSampleRate(inputStream);
@@ -537,7 +540,7 @@ static void startLocked(audioProcessingCallback apc, void *clientdata, unsigned 
 
     size_t clientBytes = MAXFRAMES * requestedNumChannels * sizeof(float);
     if (interleaved) {
-        if (inputEnabled && ((clientInput = (float *)malloc(clientBytes)) == nullptr)) { stopLocked(); return; }
+        if (inputStream && ((clientInput = (float *)malloc(clientBytes)) == nullptr)) { stopLocked(); return; }
         if (outputEnabled && ((clientOutput = (float *)malloc(clientBytes)) == nullptr)) { stopLocked(); return; }
     } else {
         channelBuffers = (float *)malloc(clientBytes * 2);
@@ -550,7 +553,7 @@ static void startLocked(audioProcessingCallback apc, void *clientdata, unsigned 
 
     timeHandler = HostTime::create();
     mapChannelsLocked(); 
-    if ((inputStream != nullptr) && (AAudioStream_requestStart(inputStream) != AAUDIO_OK)) { stopLocked(); return; }
+    if (inputStream && !outputStream && (AAudioStream_requestStart(inputStream) != AAUDIO_OK)) { stopLocked(); return; }
     if ((outputStream != nullptr) && (AAudioStream_requestStart(outputStream) != AAUDIO_OK)) { stopLocked(); return; }
 }
 

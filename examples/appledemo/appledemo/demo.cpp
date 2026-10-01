@@ -55,7 +55,7 @@ void analyzerDemo(const char *mp3path);
 // called when the app launches
 void demoStart(const char *mp3path) {
     // mandatory step when your app launches
-    yuby::YubyInit("your license key");
+    yuby::YubyInit(0, 0, 0); // three zeros allow for time-limited development use --- visit yuby.com to get a license
     // subscribe for audio related notifications
     YubyAudioIO::initialize(OnYubyAudioIOEvent, nullptr);
     // create the player and the effect before starting audio I/O

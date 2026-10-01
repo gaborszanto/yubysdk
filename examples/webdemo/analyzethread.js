@@ -4,6 +4,8 @@ async function analyze(e) {
     removeEventListener("message", analyze);
     // Create an independent Yuby instance, not using the shared memory of the main thread.
     const yuby = await Yuby.load('../../wasm/'); 
+    // Mandatory step after yuby is created.
+    yuby.call.YubyInit(0, 0, 0); // three zeros allow for time-limited development use --- visit yuby.com to get a license
 
     // Create the Decoder and open the memory buffer.
     const decoder = yuby.CreateObject(Yuby.ObjectType.Decoder);

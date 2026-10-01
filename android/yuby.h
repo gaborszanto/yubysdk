@@ -6,7 +6,8 @@
 
 namespace yuby {
 
-YUBYFUNCTION void YubyInit(const char *licenseKey);
+// Call once at startup with the three unsigned 32-bit words of the license key.
+YUBYFUNCTION void YubyInit(unsigned int l0, unsigned int l1, unsigned int l2);
 
 enum class ObjectType: int { Gate = 0, Roll = 1, BitCrusher = 2, Filter = 3, Echo = 4, EQ = 5, Whoosh = 6, Flanger = 7, Clipper = 8, Limiter = 9, Compressor = 10, Reverb = 11, Delay = 12, Player = 13, TimeStretcher = 14, FrequencyDomain = 15, Resampler = 16, Decoder = 17, AutoTune = 18, AEC = 19, BandpassFilterbank = 20, Analyzer = 21, Recorder = 22, InvalidObject = -1 };
 YUBYFUNCTION void *Create(ObjectType t);

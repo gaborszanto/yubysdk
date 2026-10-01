@@ -825,7 +825,7 @@
     "ObjectFunctions": [
         {
             "name": "YubyInit", "description": "Call this only once, when your application starts.",
-            "arguments": [ "String pointer to your license key." ]
+            "arguments": [ "First number of the license key.", "Second number of the license key.", "Third number of the license key." ]
         },
         {
             "name": "Create", "description": "Create a Yuby object.",
