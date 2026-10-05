@@ -17,6 +17,7 @@ The fastest, lowest-latency audio engine. Consistent audio across macOS, iOS, Wi
 - [`examples/appledemo/`](examples/appledemo/) — Xcode project.
 - [`examples/webdemo/`](examples/webdemo/) — Web browser demo written in JavaScript.
 - [`examples/windemo/`](examples/windemo/) — Visual Studio project.
+- [`examples/separatorexample/`](examples/separatorexample/) — AudioShake and Demucs separator integration examples, including a HTDemucs model for all Apple platforms and Windows (unzip the models first).
 
 ## Transitioning from Superpowered
 
