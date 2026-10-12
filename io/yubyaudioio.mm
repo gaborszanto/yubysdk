@@ -819,7 +819,10 @@ static OSStatus macOSDevicesChangedCallback(__attribute__((unused)) AudioObjectI
     if (inputEnabled && outputEnabled) [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayAndRecord withOptions:IOS_AVAUDIOSESSIONCATEGORYOPTIONS error:NULL];
     else [[AVAudioSession sharedInstance] setCategory:inputEnabled ? AVAudioSessionCategoryRecord : AVAudioSessionCategoryPlayback withOptions:IOS_AVAUDIOSESSIONCATEGORYOPTIONS error:NULL];
     [[AVAudioSession sharedInstance] setMode:IOS_AVAUDIOSESSION_MODE error:NULL];
-    if (IOS_PREFER_SPEAKER_OVER_RECEIVER) [[AVAudioSession sharedInstance] overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:nil];
+    if (outputEnabled && IOS_PREFER_SPEAKER_OVER_RECEIVER) for (AVAudioSessionPortDescription *port in [AVAudioSession sharedInstance].currentRoute.outputs) if ([port.portType isEqualToString:AVAudioSessionPortBuiltInReceiver]) {
+        [[AVAudioSession sharedInstance] overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:nil];
+        break;
+    }
     self->samplerate = IOS_PREFERRED_SAMPLERATE;
     [[AVAudioSession sharedInstance] setPreferredSampleRate:self->samplerate error:NULL];
     [self applyBuffersizeOnMainThread];
