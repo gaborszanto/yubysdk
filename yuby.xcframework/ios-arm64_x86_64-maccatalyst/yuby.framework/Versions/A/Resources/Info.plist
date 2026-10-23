@@ -37,9 +37,9 @@
 	<key>DTSDKName</key>
 	<string>macosx27.0</string>
 	<key>DTXcode</key>
-	<string>2700</string>
+	<string>2710</string>
 	<key>DTXcodeBuild</key>
-	<string>27A266a</string>
+	<string>27A9275</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>12.5</string>
 	<key>UIDeviceFamily</key>

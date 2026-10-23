@@ -633,7 +633,7 @@ static OSStatus macOSDevicesChangedCallback(__attribute__((unused)) AudioObjectI
     uint64_t lastCallbackTime;
     unsigned int lastPreferredBufferSizeMs;
     int numberOfChannels, silenceFrames, samplerate;
-    bool audioUnitShouldRun, audioUnitRuns, background, inputEnabled, inputRequested, outputEnabled, interleaved, interrupted, stopped;
+    bool audioUnitShouldRun, audioUnitRuns, background, inputEnabled, inputRequested, outputEnabled, interleaved, interrupted, stopped, speakerOverrideTried;
 }
 
 - (id)initOnMainThreadWithIOCallback:(audioProcessingCallback)apc audioProcessingClientdata:(void *)acd mainCallback:(YubyAudioIOCallback)mcc mainClientdata:(void *)mcd numberOfChannels:(unsigned int)nc interleaved:(bool)i inputEnabled:(bool)ie outputEnabled:(bool)oe hasRecordPermission:(bool)hasRecordPermission {
@@ -649,7 +649,7 @@ static OSStatus macOSDevicesChangedCallback(__attribute__((unused)) AudioObjectI
     inputRequested = ie;
     outputEnabled = oe;
     lastPreferredBufferSizeMs = YubyAudioIO::preferredBufferSizeMs;
-    background = audioUnitRuns = audioUnitShouldRun = interrupted = stopped = false;
+    background = audioUnitRuns = audioUnitShouldRun = interrupted = stopped = speakerOverrideTried = false;
     
     if (!interleaved) {
         outputBufs = (float **)malloc(sizeof(float *) * numberOfChannels);
@@ -762,6 +762,25 @@ static OSStatus macOSDevicesChangedCallback(__attribute__((unused)) AudioObjectI
         [self performSelectorOnMainThread:@selector(onRouteChange:) withObject:nil waitUntilDone:NO];
         return;
     }
+    if (outputEnabled && IOS_PREFER_SPEAKER_OVER_RECEIVER) {
+        bool receiverAvailable = false, usbOrHDMIAvailable = false;
+        for (AVAudioSessionPortDescription *port in [[[AVAudioSession sharedInstance] currentRoute] outputs]) {
+            if ([port.portType isEqualToString:AVAudioSessionPortUSBAudio] || [port.portType isEqualToString:AVAudioSessionPortHDMI]) {
+                usbOrHDMIAvailable = true;
+                break;
+            } else if ([port.portType isEqualToString:AVAudioSessionPortBuiltInReceiver]) receiverAvailable = true;
+        }
+        if (receiverAvailable && !usbOrHDMIAvailable) {
+            if (!speakerOverrideTried) {
+                speakerOverrideTried = true;
+                if ([[AVAudioSession sharedInstance] overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:nil]) {
+                    [self performSelectorOnMainThread:@selector(onRouteChange:) withObject:nil waitUntilDone:NO];
+                    return;
+                }
+            }
+        } else speakerOverrideTried = false;
+    }
+
     if (map.inputDeviceName) free((char *)map.inputDeviceName);
     map.inputDeviceName = map.outputDeviceName = NULL;
     map.numInputChannels = map.numOutputChannels = 0;
@@ -781,8 +800,10 @@ static OSStatus macOSDevicesChangedCallback(__attribute__((unused)) AudioObjectI
 }
 
 - (void)applyBuffersizeOnMainThread {
-    if (self->stopped || (self->samplerate < 1)) return;
-    float sec = (float)lastPreferredBufferSizeMs, sr = float(self->samplerate);
+    lastPreferredBufferSizeMs = YubyAudioIO::preferredBufferSizeMs;
+    if (stopped) return;
+    float sec = (float)lastPreferredBufferSizeMs, sr = float(samplerate);
+    if (sr < 1000.0f) sr = 48000.0f;
     if (sec < 1.0f) sec = 0.001f; else sec *= 0.001f;
     unsigned int frames = (unsigned int)powf(2.0f, floorf(log2f(sr * sec)));
     if (frames > MAXFRAMES) frames = MAXFRAMES;
@@ -791,7 +812,7 @@ static OSStatus macOSDevicesChangedCallback(__attribute__((unused)) AudioObjectI
 
 - (void)restartAudioOnMainThread {
     if (stopped || interrupted) return;
-    audioUnitRuns = false;
+    audioUnitRuns = speakerOverrideTried = false;
     destroyAudioUnit(&audioUnit);
     [[AVAudioSession sharedInstance] setActive:NO error:nil];
 
@@ -819,18 +840,15 @@ static OSStatus macOSDevicesChangedCallback(__attribute__((unused)) AudioObjectI
     if (inputEnabled && outputEnabled) [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayAndRecord withOptions:IOS_AVAUDIOSESSIONCATEGORYOPTIONS error:NULL];
     else [[AVAudioSession sharedInstance] setCategory:inputEnabled ? AVAudioSessionCategoryRecord : AVAudioSessionCategoryPlayback withOptions:IOS_AVAUDIOSESSIONCATEGORYOPTIONS error:NULL];
     [[AVAudioSession sharedInstance] setMode:IOS_AVAUDIOSESSION_MODE error:NULL];
-    if (outputEnabled && IOS_PREFER_SPEAKER_OVER_RECEIVER) for (AVAudioSessionPortDescription *port in [AVAudioSession sharedInstance].currentRoute.outputs) if ([port.portType isEqualToString:AVAudioSessionPortBuiltInReceiver]) {
-        [[AVAudioSession sharedInstance] overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:nil];
-        break;
-    }
-    self->samplerate = IOS_PREFERRED_SAMPLERATE;
-    [[AVAudioSession sharedInstance] setPreferredSampleRate:self->samplerate error:NULL];
+    [[AVAudioSession sharedInstance] setPreferredSampleRate:IOS_PREFERRED_SAMPLERATE error:NULL];
     [self applyBuffersizeOnMainThread];
     [[AVAudioSession sharedInstance] setActive:YES error:NULL];
     audioUnit = [self createRemoteIOOnMainThread];
     [self onRouteChange:nil];
     audioUnitShouldRun = true;
-    if ((audioUnit == NULL) || AudioOutputUnitStart(audioUnit)) return; else audioUnitRuns = true;
+    if (audioUnit == NULL) return;
+    audioUnitRuns = true;
+    if (AudioOutputUnitStart(audioUnit)) audioUnitRuns = false;
 }
 
 static void streamFormatChangedCallback(void *inRefCon, AudioUnit inUnit, AudioUnitPropertyID inID, AudioUnitScope inScope, AudioUnitElement inElement) {
@@ -864,13 +882,13 @@ static OSStatus coreAudioProcessingCallback(void *inRefCon, AudioUnitRenderActio
             self->audioUnitRuns = false;
             [self performSelectorOnMainThread:@selector(restartAudioOnMainThread) withObject:nil waitUntilDone:NO];
         }
+        return kAudioUnitErr_InvalidParameter;
     }
     if (self->lastPreferredBufferSizeMs != YubyAudioIO::preferredBufferSizeMs) {
         self->lastPreferredBufferSizeMs = YubyAudioIO::preferredBufferSizeMs;
         [self performSelectorOnMainThread:@selector(applyBuffersizeOnMainThread) withObject:nil waitUntilDone:NO];
     }
-
-    if ((inNumberFrames < 32) || (inNumberFrames > MAXFRAMES) || (int(self->interleaved ? ioData->mBuffers[0].mNumberChannels : ioData->mNumberBuffers) != self->numberOfChannels)) return kAudioUnitErr_InvalidParameter;
+    if (!self->audioUnitRuns || (inNumberFrames < 32) || (inNumberFrames > MAXFRAMES) || (int(self->interleaved ? ioData->mBuffers[0].mNumberChannels : ioData->mNumberBuffers) != self->numberOfChannels)) return kAudioUnitErr_InvalidParameter;
 
     bool silence = true;
     if (self->interleaved) {
