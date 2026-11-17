@@ -866,7 +866,12 @@
         },
         {
             "name": "Open", "description": "Open content (such as an audio file).",
-            "arguments": [ "Pointer to a Decoder or Player object.", "Pointer to the content: a path string or a pointer to data in memory.", "Start offset bytes in the file or from the data pointer. Use 0 for regular audio files.", "Length of the audio payload in the file or the size of the memory data, in bytes. Use 0 for regular audio files.", "Any bitwise OR combination of OpenFlag values.", "Optional pointer to a byte. An Open() can block for a long time and setting the value of this byte to 1 will cancel it." ]
+            "arguments": [ 
+                "Pointer to a Decoder or Player object.", 
+                "Pointer to a string, which can be a simple local path to an audio file or a URL in the following formats: audioinmemory://[address of AudioInMemoryHeader] audiofileinmemory://[address]?size=[bytes]&offset=[bytes,optional] AudioInMemory allows for loading PCM16 interleaved stereo audio directly from memory. AudioFileInMemory is just a complete audio file in memory, an mp3 for example.", 
+                "Any bitwise OR combination of OpenFlag values.", 
+                "Optional pointer to a byte. An Open() can block for a long time and setting the value of this byte to 1 will cancel it." 
+            ]
         },
         {
             "name": "Process", "description": "Process audio.",

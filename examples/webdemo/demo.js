@@ -46,7 +46,7 @@ async function initializeDemo() {
     // Create the Yuby objects before starting the AudioWorklet.
     yuby = await Yuby.load("../../wasm/", { shared: true });
     // Mandatory step after yuby is created.
-    yuby.call.YubyInit(0, 0, 0); // three zeros allow for time-limited development use --- visit yuby.com to get a license
+    yuby.call.YubyInit(0, 0, 0); // three zeros allow for time-limited internal development use only --- visit yuby.com to get a license
     player = yuby.CreateObject(Yuby.ObjectType.Player);
     reverb = yuby.CreateObject(Yuby.ObjectType.Reverb);
 

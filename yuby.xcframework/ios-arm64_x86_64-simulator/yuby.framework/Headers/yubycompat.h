@@ -495,8 +495,7 @@ public:
     void *obj;
     
     typedef enum JogMode { JogMode_Scratch = 0, JogMode_PitchBend = 1,  JogMode_Parameter = 2 } JogMode;
-    typedef enum PlayerEvent { PlayerEvent_None = 0, PlayerEvent_Opening = 1, PlayerEvent_OpenFailed = 2, PlayerEvent_Opened = 10, PlayerEvent_ConnectionLost = 3, PlayerEvent_ProgressiveDownloadFinished = 11
-    } PlayerEvent;
+    typedef enum PlayerEvent { PlayerEvent_None = 0, PlayerEvent_Opening = 1, PlayerEvent_OpenFailed = 2, PlayerEvent_Opened = 10, PlayerEvent_ConnectionLost = 3, PlayerEvent_ProgressiveDownloadFinished = 11 } PlayerEvent;
     typedef enum SyncMode { SyncMode_None = 0, SyncMode_Tempo = 1, SyncMode_TempoAndBeat = 2 } SyncMode;
 
     unsigned int outputSamplerate;
@@ -534,7 +533,10 @@ public:
     void open(const char *path, int offset, int length, void *customHTTPRequest = 0, bool skipSilenceAtBeginning = false, bool measureSilenceAtEnd = false) {
         yuby::Open(obj, path, skipSilenceAtBeginning ? yuby::OpenFlag::MeasureSilence : 0);
     }
-    PlayerEvent getLatestEvent() { return ((PlayerEvent)yuby::Get(obj, yuby::OpenState)); }
+    PlayerEvent getLatestEvent() { 
+        double v = yuby::Get(obj, yuby::OpenState);
+        return v == yuby::OpenState::Closed ? PlayerEvent_Opened : (PlayerEvent)v;
+    }
     int getOpenErrorCode() { return 0; }
     const char *getFullyDownloadedFilePath() { return NULL; }
     bool eofRecently() { return yuby::Get(obj, yuby::AtTheEnd) != 0.0; }
